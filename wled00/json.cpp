@@ -124,14 +124,8 @@ void deserializeSegment(JsonObject elem, byte it, byte presetId)
       }
 
       if (!colValid) continue;
-      if (id == strip.getMainSegmentId() && i < 2) //temporary, to make transition work on main segment
-      {
-        if (i == 0) {col[0] = rgbw[0]; col[1] = rgbw[1]; col[2] = rgbw[2]; col[3] = rgbw[3];}
-        if (i == 1) {colSec[0] = rgbw[0]; colSec[1] = rgbw[1]; colSec[2] = rgbw[2]; colSec[3] = rgbw[3];}
-      } else { //normal case, apply directly to segment
-        seg.setColor(i, ((rgbw[3] << 24) | ((rgbw[0]&0xFF) << 16) | ((rgbw[1]&0xFF) << 8) | ((rgbw[2]&0xFF))), id);
-        if (seg.mode == FX_MODE_STATIC) strip.trigger(); //instant refresh
-      }
+      seg.setColor(i, ((rgbw[3] << 24) | ((rgbw[0]&0xFF) << 16) | ((rgbw[1]&0xFF) << 8) | ((rgbw[2]&0xFF))), id);
+      if (seg.mode == FX_MODE_STATIC) strip.trigger(); //instant refresh
     }
   }
 
@@ -152,26 +146,15 @@ void deserializeSegment(JsonObject elem, byte it, byte presetId)
   seg.setOption(SEG_OPTION_REVERSED, elem["rev"]    | seg.getOption(SEG_OPTION_REVERSED));
   seg.setOption(SEG_OPTION_MIRROR  , elem[F("mi")]  | seg.getOption(SEG_OPTION_MIRROR  ));
 
-  //temporary, strip object gets updated via colorUpdated()
-  if (id == strip.getMainSegmentId()) {
-		byte effectPrev = effectCurrent;
-    if (getVal(elem["fx"], &effectCurrent, 1, strip.getModeCount())) { //load effect ('r' random, '~' inc/dec, 0-255 exact value)
-      if (!presetId && effectCurrent != effectPrev) unloadPlaylist(); //stop playlist if active and FX changed manually
-    }
-    effectSpeed = elem[F("sx")] | effectSpeed;
-    effectIntensity = elem[F("ix")] | effectIntensity;
-    getVal(elem["pal"], &effectPalette, 1, strip.getPaletteCount());
-  } else { //permanent
-    byte fx = seg.mode;
-		byte fxPrev = fx;
-    if (getVal(elem["fx"], &fx, 1, strip.getModeCount())) { //load effect ('r' random, '~' inc/dec, 0-255 exact value)
-      strip.setMode(id, fx);
-      if (!presetId && seg.mode != fxPrev) unloadPlaylist(); //stop playlist if active and FX changed manually
-    }
-    seg.speed = elem[F("sx")] | seg.speed;
-    seg.intensity = elem[F("ix")] | seg.intensity;
-    getVal(elem["pal"], &seg.palette, 1, strip.getPaletteCount());
+  byte fx = seg.mode;
+  byte fxPrev = fx;
+  if (getVal(elem["fx"], &fx, 1, strip.getModeCount())) { //load effect ('r' random, '~' inc/dec, 0-255 exact value)
+    strip.setMode(id, fx);
+    if (!presetId && seg.mode != fxPrev) unloadPlaylist(); //stop playlist if active and FX changed manually
   }
+  seg.speed = elem[F("sx")] | seg.speed;
+  seg.intensity = elem[F("ix")] | seg.intensity;
+  getVal(elem["pal"], &seg.palette, 1, strip.getPaletteCount());
 
   JsonArray iarr = elem[F("i")]; //set individual LEDs
   if (!iarr.isNull()) {
@@ -319,7 +302,7 @@ bool deserializeState(JsonObject root, byte callMode, byte presetId)
       }
       if (!didSet && lowestActive < strip.getMaxSegments()) deserializeSegment(segVar, lowestActive, presetId);
     } else { //set only the segment with the specified ID
-      deserializeSegment(segVar, it, presetId);
+      deserializeSegment(segVar, id, presetId);
     }
   } else {
     JsonArray segs = segVar.as<JsonArray>();
@@ -329,6 +312,7 @@ bool deserializeState(JsonObject root, byte callMode, byte presetId)
       it++;
     }
   }
+  setValuesFromMainSeg();
 
   #ifndef WLED_DISABLE_CRONIXIE
     if (root["nx"].is<const char*>()) {
