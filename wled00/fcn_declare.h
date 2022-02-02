@@ -23,6 +23,8 @@ void updateBlynk();
 
 //button.cpp
 void shortPressAction(uint8_t b=0);
+void longPressAction(uint8_t b=0);
+void doublePressAction(uint8_t b=0);
 bool isButtonPressed(uint8_t b=0);
 void handleButton();
 void handleIO();
@@ -135,7 +137,9 @@ void serializeSegment(JsonObject& root, WS2812FX::Segment& seg, byte id, bool fo
 void serializeState(JsonObject root, bool forPreset = false, bool includeBri = true, bool segmentBounds = true);
 void serializeInfo(JsonObject root);
 void serveJson(AsyncWebServerRequest* request);
+#ifdef WLED_ENABLE_JSONLIVE
 bool serveLiveLeds(AsyncWebServerRequest* request, uint32_t wsClient = 0);
+#endif
 
 //led.cpp
 void setValuesFromMainSeg();
@@ -191,7 +195,9 @@ void handlePlaylist();
 
 //presets.cpp
 bool applyPreset(byte index, byte callMode = CALL_MODE_DIRECT_CHANGE);
+inline bool applyTemporaryPreset() {return applyPreset(255);};
 void savePreset(byte index, bool persist = true, const char* pname = nullptr, JsonObject saveobj = JsonObject());
+inline void saveTemporaryPreset() {savePreset(255, false);};
 void deletePreset(byte index);
 
 //set.cpp
@@ -281,6 +287,7 @@ void clearEEPROM();
 
 //wled_serial.cpp
 void handleSerial();
+void updateBaudRate(uint32_t rate);
 
 //wled_server.cpp
 bool isIp(String str);
