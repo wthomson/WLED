@@ -216,7 +216,6 @@ class MPU6050Driver : public Usermod {
       //this code adds "u":{"Light":[20," lux"]} to the info object
       JsonObject user = root["u"];
       if (user.isNull()) user = root.createNestedObject("u");
-
       JsonArray imu_meas = user.createNestedObject("IMU");
       JsonArray quat_json = imu_meas.createNestedArray("Quat");
       quat_json.add(qat.w);
