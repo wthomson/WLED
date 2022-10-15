@@ -131,6 +131,10 @@
 #include "../usermods/Si7021_MQTT_HA/usermod_si7021_mqtt_ha.h"
 #endif
 
+#ifdef USERMOD_MPU650
+#include  "../usermods/mpu6050_imu/usermod_mpu6050_imu.h"
+#endif
+
 void registerUsermods()
 {
 /*
@@ -248,5 +252,8 @@ void registerUsermods()
   
   #ifdef USERMOD_SI7021_MQTT_HA
   usermods.add(new Si7021_MQTT_HA());
+  #endif
+  #ifdef USERMOD_MPU650
+  usermods.add(new MPU6050Driver());
   #endif
 }
