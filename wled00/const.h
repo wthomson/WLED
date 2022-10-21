@@ -94,6 +94,8 @@
 #define USERMOD_ID_SMARTNEST             31     //Usermod "usermod_smartnest.h"
 #define USERMOD_ID_AUDIOREACTIVE         32     //Usermod "audioreactive.h"
 #define USERMOD_ID_ANALOG_CLOCK          33     //Usermod "Analog_Clock.h"
+#define USERMOD_ID_PING_PONG_CLOCK       34     //Usermod "usermod_v2_ping_pong_clock.h"
+#define USERMOD_ID_ADS1115               35     //Usermod "usermod_ads1115.h"
 
 //Access point behavior
 #define AP_BEHAVIOR_BOOT_NO_CONN          0     //Open AP when no connection after boot
@@ -217,7 +219,7 @@
 #define BTN_TYPE_ANALOG_INVERTED  8
 
 //Ethernet board types
-#define WLED_NUM_ETH_TYPES        8
+#define WLED_NUM_ETH_TYPES        9
 
 #define WLED_ETH_NONE             0
 #define WLED_ETH_WT32_ETH01       1
