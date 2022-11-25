@@ -1,10 +1,10 @@
 # Description
 
-That usermod implements support of simple hand gestures with VL53L0X sensor: on/off and brightness correction.
-It can be useful for kitchen strips to avoid any touches.
- - on/off - just swipe a hand below your sensor ("shortPressAction" is called and can be customized through WLED macros)
- - brightness correction - keep your hand below sensor for 1 second to switch to "brightness" mode.
-                           Configure brightness by changing distance to the sensor (see parameters below for customization).
+Implements support of simple hand gestures with VL53L0X sensor: on/off and brightness correction.
+Useful for controlling strips when you want to avoid touching anything.
+ - on/off - just swipe a hand below your sensor ("shortPressAction" is called. Can be customized via WLED macros)
+ - brightness adjustment - hold your hand below the sensor for 1 second to switch to "brightness" mode.
+                           Adjust the brightness by changing the distance between your hand and the sensor (see parameters below for customization).
    
 ## Installation
 
