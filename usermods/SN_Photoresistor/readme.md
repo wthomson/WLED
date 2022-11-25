@@ -1,7 +1,7 @@
 # SN_Photoresistor usermod
 
 This usermod will read from an attached photoresistor sensor like the KY-018 sensor.
-The luminance is displayed both in the Info section of the web UI as well as published to the `/luminance` MQTT topic if enabled.
+The luminance is displayed in both the Info section of the web UI, as well as published to the `/luminance` MQTT topic if enabled.
 
 ## Installation
 
